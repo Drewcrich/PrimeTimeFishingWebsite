@@ -126,10 +126,30 @@ L_total     = clamp(L_total_raw, 0, L_REF)       // global clamp
 
 rating = 1 + 4 × (L_total / L_REF)               // where L_REF = 0.28</code></pre>
 
+        <h3 id="calculation-methodology">Calculation Methodology (All‑day rating)</h3>
+        <p>This section is the “how it’s calculated” reference for Mahi v1 (mirrors the canonical internal doc).</p>
+        <pre><code>Step 1) Phase curve (shared Yellowfin/Mahi family)
+phaseBoostValue = moonPhaseBoostYellowfinMahi(f)  // f in [0,1]
+L_phase = (phaseBoostValue × phaseWeight / 2.0) × 0.31
+phaseWeight = 1.33
+
+Step 2) Fixed all‑day baselines (modeling assumptions)
+L_overlap_avg = overlap(overlapMaxBoost × 0.4, overlapMaxBoost)
+L_time_avg    = timeBias(nightAvailability × 0.5)   // assume ~50% of day is night
+
+Step 3) Ocean block (SST required; CHL optional)
+If SST missing → L_ocean = 0.00
+If SST &lt; 19°C → force L_chl = 0.00 (cold gate)
+L_ocean = clamp(L_sst + L_chl, -0.06, +0.02)
+
+Step 4) Total lift → rating
+L_total = clamp(L_phase + L_overlap_avg + L_time_avg + L_ocean, 0, 0.28)
+Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
+
         <h3 id="variables">Variables (what’s research-backed vs calibrated)</h3>
         <p><strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources. <strong>Calibrated</strong> means we chose the exact curve shape/thresholds/weights/caps to produce a stable 1.0–5.0 score and to avoid overclaiming from region- or gear-specific studies.</p>
 
-        <h4 id="calculation-methodology">Moon phase (L_phase)</h4>
+        <h4>Moon phase (L_phase)</h4>
         <p><strong>Research-backed:</strong> an open-access offshore tournament summary reports Dolphinfish (Mahi‑mahi) catch-rate peak at <strong>First Quarter</strong>.</p>
         <p><strong>Source (open PDF):</strong> <a href="https://ncseagrant.ncsu.edu/coastwatch/wp-content/uploads/sites/13/2020/12/WinterHookLineScience.pdf" target="_blank" rel="noopener noreferrer">NC Sea Grant — Hook, Line &amp; Science (Winter 2020)</a></p>
         <blockquote>“Scientists found a relationship between catch rates and lunar phase for 5 of the 8 species as shown here…<br>Dolphinfish first quarter” <span class="muted">(PDF p.2)</span></blockquote>
@@ -146,7 +166,10 @@ phaseWeight = 1.33</code></pre>
         <p><strong>Source (open access):</strong> <a href="https://www.frontiersin.org/articles/10.3389/fmars.2021.626082/pdf" target="_blank" rel="noopener noreferrer">Schlenker et al. 2021 — Frontiers in Marine Science (PDF)</a></p>
         <p><strong>Calibrated:</strong> we translate diel context into a small fixed all‑day average lift using <code>nightAvailability = 0.285</code> and assume ~50% of a day is night.</p>
 
-        <h4 id="environmental-variables">Oceanography (SST + chlorophyll‑a) (L_ocean)</h4>
+        <h3 id="environmental-variables">Environmental Variables (Verification)</h3>
+        <p>This section documents <strong>what the papers say</strong> (verbatim quotes with page pointers) and then shows exactly how PrimeBite maps that into a stable rating (calibrated thresholds + caps).</p>
+
+        <h4>Oceanography (SST + chlorophyll‑a) (L_ocean)</h4>
         <p><strong>Research-backed:</strong> multiple open-access studies show SST and chlorophyll-a covary with dolphinfish/mahi CPUE/habitat, but ranges are region-dependent.</p>
 
         <p><strong>SST anchors:</strong></p>
@@ -157,12 +180,23 @@ phaseWeight = 1.33</code></pre>
         <p><a href="https://repository.library.noaa.gov/view/noaa/5470/noaa_5470_DS1.pdf" target="_blank" rel="noopener noreferrer">Palko et al. 1982 (PDF)</a></p>
         <blockquote>“...are generally restricted by the 20°C isotherm (Gibbs and Collette 1959).” <span class="muted">(PDF p.4)</span></blockquote>
 
+        <p><a href="https://sedarweb.org/documents/s58rd30_using-pop-off-satellite-archival-tags-to-monitor-and-track-dolphinfish-and-cobia/" target="_blank" rel="noopener noreferrer">Hammond 2008 (SEDAR document page)</a></p>
+        <blockquote>“Dolphinfish were shown to utilize ocean waters with temperatures ranging from 16.0 to 30.5°C.” <span class="muted">(Hammond 2008; quoted in our fact-check log)</span></blockquote>
+
+        <p><a href="https://www.sportfishcenter.org/sites/default/files/2018-07/young_thesis.pdf" target="_blank" rel="noopener noreferrer">Young thesis (PDF)</a></p>
+        <blockquote>“...tolerated temperatures from 15°C to 29°C but would stop feeding at 18°C (Hassler and Hogarth 1977).” <span class="muted">(PDF p.76)</span></blockquote>
+
         <p><strong>Chlorophyll anchors:</strong></p>
         <blockquote>“...low concentrations of chlorophyll‑a (&lt;0.02 mg/m3) ...” <span class="muted">(Marín‑Enríquez &amp; Muhlia‑Melo 2018, PDF p.1)</span></blockquote>
         <blockquote>“82.90% of total fish... was caught in waters with concentrations of chl‑a between 0.05 and 0.25 mg/m3...” <span class="muted">(Marín‑Enríquez &amp; Muhlia‑Melo 2018, PDF p.5)</span></blockquote>
         <blockquote>“Higher values of CPUE occurred in places where Chl‑a varied between 0.5 and 2.2 mg/m3. Below and above these values respectively, CPUE decreased.” <span class="muted">(Martínez Arias et al. 2022, PDF p.5)</span></blockquote>
 
-        <p><strong>Calibrated:</strong> we keep ocean effects capped and apply a cold-water gate (if <code>SST &lt; 19°C</code>, CHL bonuses are disabled).</p>
+        <p><strong>Calibrated (exact rules used in-app):</strong></p>
+        <ul>
+          <li><strong>SST required</strong> (if missing, ocean is treated as neutral: <code>L_ocean = 0.00</code>).</li>
+          <li><strong>Cold-water gate:</strong> if <code>SST &lt; 19°C</code>, force <code>L_chl = 0.00</code> (do not allow CHL bonuses to partially cancel cold penalties).</li>
+          <li><strong>Ocean cap:</strong> <code>L_ocean = clamp(L_sst + L_chl, -0.06, +0.02)</code>.</li>
+        </ul>
 
         <h3 id="worked-example">Worked examples (inputs → lifts → rating)</h3>
         <h4>Best case (prime moon window + strong ocean)</h4>
