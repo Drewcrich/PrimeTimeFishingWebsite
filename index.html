@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrimeBite Fishing</title>
     <meta name="description" content="PrimeBite Fishing — solunar bite windows, personal logbook with optional GPS/photo tagging, and full offline support.">
-    <link rel="canonical" href="https://fishin.netlify.app/">
+    <link rel="canonical" href="https://primetimefishing.netlify.app/">
     
     <!-- Open Graph -->
     <meta property="og:title" content="PrimeBite Fishing">
     <meta property="og:description" content="PrimeBite Fishing — solunar bite windows, personal logbook with optional GPS/photo tagging, and full offline support.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fishin.netlify.app/">
+    <meta property="og:url" content="https://primetimefishing.netlify.app/">
     <meta name="theme-color" content="#1a1a1a">
     
     <!-- iOS Smart App Banner -->
@@ -28,7 +28,7 @@
         "@context": "https://schema.org",
         "@type": "PrivacyPolicy",
         "name": "PrimeBite Fishing — Privacy Policy",
-        "url": "https://fishin.netlify.app/#privacy",
+        "url": "https://primetimefishing.netlify.app/#privacy",
         "dateModified": "2025-12-08",
         "publisher": {
             "@type": "Organization",
@@ -416,118 +416,13 @@
                     <h3>Big Eye Tuna</h3>
                     <p>Our Big Eye Tuna rating system uses moon phase patterns and oceanographic data (sea surface temperature and chlorophyll-a) to predict activity.</p>
                     <ul>
-                        <li><strong><a href="#bigeye-calculation" style="color: #4a9eff;">Calculation Methodology</a></strong> — Complete walkthrough of how Big Eye Tuna ratings are calculated, including research citations with exact quotes and page numbers.</li>
-                        <li><strong><a href="#bigeye-environmental" style="color: #4a9eff;">Environmental Variables</a></strong> — Verification log of all environmental factors used, with open-access source citations.</li>
+                        <li>
+                            <strong><a href="/bigeye.html" style="color: #4a9eff;">Bigeye Tuna — Full Transparency (Website Page)</a></strong>
+                            — All equations, every variable, every URL, exact quotes with page pointers, calibration rationale, worked examples, and a model changelog.
+                        </li>
+                        <li><strong><a href="/bigeye.html#calculation-methodology" style="color: #4a9eff;">Calculation Methodology</a></strong> — The exact math and logic PrimeBite uses for Bigeye (v1).</li>
+                        <li><strong><a href="/bigeye.html#environmental-variables" style="color: #4a9eff;">Environmental Variables</a></strong> — Verification highlights for the SST/CHL evidence behind our Bigeye ocean block.</li>
                     </ul>
-                    
-                    <div id="bigeye-calculation" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
-                        <h3>Big Eye Tuna — Calculation Methodology</h3>
-                        <p><em>Last updated: January 2026</em></p>
-                        
-                        <p>This document explains how PrimeBite calculates Big Eye Tuna bite ratings. Big Eye is treated as a <strong>global profile</strong> in PrimeBite. When evidence is <strong>region- or fishery-specific</strong>, we say so explicitly.</p>
-                        
-                        <h4>Current Status</h4>
-                        <ul>
-                            <li><strong>Profile:</strong> Big Eye Tuna (Offshore) — all-day rating (no Major/Minor windows)</li>
-                            <li><strong>Evidence standard:</strong> open-access sources + verbatim quotes with page pointers</li>
-                            <li><strong>Implementation note:</strong> moon phase curve shape and lift sizing are calibrated unless an effect size is explicitly reported.</li>
-                        </ul>
-                        
-                        <h4>What We Currently Use (and Why)</h4>
-                        
-                        <h5>1) Moon Phase (Phase-Only Offshore Driver)</h5>
-                        <p><strong>Evidence anchor (open access, longline; Eastern Indian Ocean):</strong> Jatmiko et al. (2016) report significant differences among moon phases and the <strong>highest average catch rate at full moon</strong> in their dataset.</p>
-                        <p><strong>Source:</strong> <a href="https://ejournal.undip.ac.id/index.php/ijms/article/view/10245" target="_blank" style="color: #4a9eff;">Jatmiko et al. 2016 — ILMU KELAUTAN (open access)</a></p>
-                        <p><strong>Quote (PDF page 1 / journal p.101):</strong></p>
-                        <blockquote>"The result showed that the average catch rate of bigeye tuna differed significantly among the moon phases. Tukey post-hoc tests showed that the average catch rate at full moon was the highest among the groups with around 0.3/100 hooks."</blockquote>
-                        <p><strong>Transparency note:</strong> The paper is EIO longline; applying the pattern globally is a <strong>modeling choice</strong> until we collect multiple-region open-access replications.</p>
-                        
-                        <h5>2) Diel Behavior / Night Availability (Supporting Mechanism)</h5>
-                        <p><strong>Evidence anchor (open PDF, archival tags; Hawaii region):</strong> Musyl et al. (2003) describe strong day/night vertical behavior differences and discuss lunar illumination relationships with night-time depth.</p>
-                        <p><strong>Source:</strong> <a href="https://www.soest.hawaii.edu/pfrp/reprints/musyl_et_al_03.pdf" target="_blank" style="color: #4a9eff;">Musyl et al. 2003 — Bigeye vertical movements (open PDF)</a></p>
-                        <p><strong>Quote (PDF page 2):</strong></p>
-                        <blockquote>"At night, however, bigeye tuna generally restrict their vertical movements to the surface layer."</blockquote>
-                        <p><strong>Quote (PDF page 9):</strong></p>
-                        <blockquote>"Of the three fish at liberty long enough to have experienced several lunar cycles (Fishes 509, 241, and 625), Fish 509 exhibited the clearest correlation between average night-time depth and lunar illumination (r = 0.74, P < 0.001, Table 2). The fish occupied mean deeper night-time depths during the full moon and shallower depths during the new moon (Fig. 7)."</blockquote>
-                        <p><strong>User-facing interpretation:</strong> Big Eye are often <strong>deep during the day</strong> and <strong>shallower at night</strong> in tagging studies. That means offshore "high potential" commonly depends on whether you're fishing <strong>deep</strong> (daytime) and/or targeting the <strong>nighttime shallow window</strong> (method dependent).</p>
-                        
-                        <h5>3) Oceanography (SST + Chlorophyll-a/SSC) — Big Eye "Ocean Block v1"</h5>
-                        <p><strong>Status:</strong> ✅ Implemented (conservative; capped; research-backed drivers, calibrated thresholds/lifts)</p>
-                        <p>Used for: a small, capped modifier applied to the Big Eye all‑day rating when ocean data is available:</p>
-                        <ul>
-                            <li><strong>SST</strong> (surface temperature)</li>
-                            <li><strong>Chlorophyll-a / SSC</strong> (productivity proxy; units mg/m³)</li>
-                        </ul>
-                        <p><strong>Why:</strong> Multiple open-access, region-specific studies support that SST and chlorophyll (or proxies) relate to Big Eye catchability/habitat. We treat the <strong>exact thresholds and lift sizes as calibrated</strong> (product choices), and we apply a <strong>small cap</strong> so ocean variables modulate the score without dominating it.</p>
-                        <p><strong>Evidence anchors (open access; region/gear specific):</strong></p>
-                        <ul>
-                            <li>Syamsuddin et al. (2013) (EIO off Java; Fishery Bulletin): SST is the most important predictor vs SSHA and chlorophyll-a; higher catchability at ~24–27.5°C; lower at >27.5°C.</li>
-                            <li>Setiawati & Miura (2014) (Java–Bali; PORSEC): "optimum" SST and SSC ranges; SSC <0.1 mg/m³ relates to higher null-catch frequency and "most fishing activity" SSC band.</li>
-                        </ul>
-                        <p>See the <a href="#bigeye-environmental" style="color: #4a9eff;">Environmental Variables</a> section below for exact quotes and page numbers.</p>
-                        
-                        <h4>Research‑Backed vs. Calibrated Values (Transparency)</h4>
-                        
-                        <h5>Research‑backed</h5>
-                        <ul>
-                            <li><strong>Direction of effect (EIO longline):</strong> full moon highest average catch rate (Jatmiko 2016).</li>
-                            <li><strong>Behavioral mechanism:</strong> strong day/night vertical movement differences; night-time depth can covary with lunar illumination (Musyl 2003; r = 0.74, P < 0.001 for Fish 509; deeper at full moon, shallower at new moon).</li>
-                            <li><strong>Oceanography drivers (regional evidence):</strong> SST + chlorophyll/SSC covary with Big Eye catchability/habitat in multiple open-access regional studies.</li>
-                        </ul>
-                        
-                        <h5>Calibrated (current app choices)</h5>
-                        <ul>
-                            <li><strong>Exact phase curve shape</strong> for bigeye-full is a calibrated smooth curve <em>anchored</em> to a full-moon peak (not an effect-size fit).</li>
-                            <li><strong>Night-availability magnitude</strong> is calibrated; the papers support a day/night behavior difference but do not provide a single global "+X% catch at night" effect size suitable for universal scoring.</li>
-                        </ul>
-                    </div>
-                    
-                    <div id="bigeye-environmental" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
-                        <h3>Big Eye Tuna — Environmental Variables Verification</h3>
-                        <p><em>Last updated: January 2026</em></p>
-                        
-                        <p>This document contains <strong>open‑access, verified</strong> evidence that we actually use in the current Big Eye v1 launch oceanography block.</p>
-                        
-                        <p><strong>Verification method (required):</strong> We only accept a claim after we can download the open‑access PDF, extract text page‑by‑page, and cite an exact quote + page number + URL.</p>
-                        
-                        <p><strong>Scope rule:</strong> These studies are region- and gear-specific. We use them as evidence that SST/CHL/SSC relate to catchability/habitat, and we keep the v1 ocean modifier small and capped.</p>
-                        
-                        <h4>✅ Verified Sources (used in Big Eye v1)</h4>
-                        
-                        <h5>1) Syamsuddin et al. (2013) — SST + SSHA + chlorophyll-a predictors (EIO off Java; Fishery Bulletin)</h5>
-                        <p><strong>Working PDF (open access):</strong> <a href="https://spo.nmfs.noaa.gov/sites/default/files/syamsuddin.pdf" target="_blank" style="color: #4a9eff;">https://spo.nmfs.noaa.gov/sites/default/files/syamsuddin.pdf</a></p>
-                        
-                        <p><strong>SST importance (relative to SSHA + chlorophyll-a) — Quote (PDF p.10):</strong></p>
-                        <blockquote>"SST was a more important oceanographic predictor of Bigeye Tuna catches than were the other environmental variables (SSHA and chlorophyll-a) in this region."</blockquote>
-                        
-                        <p><strong>SST direction + threshold — Quote (PDF p.10):</strong></p>
-                        <blockquote>"Our results indicate that Bigeye Tuna catches increased in areas with relatively low temperatures (24–27.5°C) and decreased at temperatures >27.5°C (Fig. 6B)."</blockquote>
-                        
-                        <p><strong>High-probability ranges — Quote (PDF p.8):</strong></p>
-                        <blockquote>"High probabilities of Bigeye Tuna presence were observed for SSHA ranging from –21 to 5 cm, for SST ranging from 24° to 27.5°C, and for chlorophyll-a levels ranging from 0.04 to 0.16 mg m–3."</blockquote>
-                        
-                        <p><strong>Negative-effects ranges — Quote (PDF p.8):</strong></p>
-                        <blockquote>"Negative effects on Bigeye Tuna were observed for SSHA >5 cm, SST values >27.5°C, and chlorophyll-a values of 0.01–0.03 mg m–3 and >0.16 mg m–3."</blockquote>
-                        
-                        <h5>2) Setiawati & Miura (2014) — SST + "SSC" (Java–Bali; PORSEC proceedings)</h5>
-                        <p><strong>ResearchGate page:</strong> <a href="https://www.researchgate.net/publication/278968733_Sea_Surface_Temperature_and_Sea_Surface_Chlorophyll_in_Relation_to_Bigeye_Tuna_Fishery_in_the_Southern_Waters_off_Java_and_Bali" target="_blank" style="color: #4a9eff;">Setiawati & Miura 2014 — SST + SSC (ResearchGate page)</a></p>
-                        
-                        <p><strong>SST optimum window — Quote (PDF p.1 / Abstract):</strong></p>
-                        <blockquote>"Statistical analysis showed the optimum of SST for bigeye tuna is less than 29.1°C and more than 27.4°C."</blockquote>
-                        
-                        <p><strong>SSC optimum window — Quote (PDF p.1 / Abstract):</strong></p>
-                        <blockquote>"In addition, the optimum value of SSC was 0.055 to 0.175 mg m-3."</blockquote>
-                        
-                        <p><strong>Null-catch frequency — Quote (PDF p.5):</strong></p>
-                        <blockquote>"Figure 6 showed the null catches frequency related to the SSC. Even though, as shown in Fig. 4, the mode of the number of fishing days occurred when SSC is less than 0.1 mg m-3 but the null catches frequency also tends to high when the SSC concentration is less than 0.1 mg m-3."</blockquote>
-                        
-                        <p><strong>"Most of fishing activity" SSC band — Quote (PDF p.5):</strong></p>
-                        <blockquote>"The most of fishing activity occurred when the SSC ranged from 0.11 to 0.13 mg m-3 (0.12±.0.01 mg m-3)."</blockquote>
-                    </div>
-                    
-                    <p style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333; font-style: italic; color: #b0b0b0;">
-                        <strong>Important:</strong> Evidence is region/fishery-specific. PrimeBite treats Big Eye as a global profile and keeps lift sizes conservative. The exact thresholds and lift sizes used in the app are calibrated product choices, while the drivers themselves (SST, chlorophyll-a, moon phase) are research-backed.
-                    </p>
                 </div>
             </div>
         </section>

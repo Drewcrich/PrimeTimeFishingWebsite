@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeBite Fishing — Bigeye Tuna Transparency</title>
+  <meta name="description" content="PrimeBite Fishing — Bigeye Tuna full transparency: equations, variables, citations, exact quotes with page pointers, and calibration rationale.">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="canonical" href="https://primetimefishing.netlify.app/bigeye">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #e0e0e0;
+      background: #1a1a1a;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+    .header {
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+    .nav { display: flex; justify-content: center; gap: 1.1rem; padding: 1rem 0; flex-wrap: wrap; }
+    .nav a { color: #e0e0e0; text-decoration: none; font-weight: 600; }
+    .nav a:hover { color: #4a9eff; }
+    .section { padding: 44px 0; }
+    h1, h2, h3, h4 { margin-bottom: 12px; color: #fff; }
+    h2 { font-size: 2rem; margin-bottom: 16px; }
+    h3 { margin-top: 28px; }
+    p { margin-bottom: 12px; }
+    ul { margin: 10px 0 16px 22px; }
+    li { margin-bottom: 6px; }
+    a { color: #4a9eff; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    pre {
+      background: #111827;
+      border: 1px solid #243041;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 12px 0 18px 0;
+    }
+    blockquote {
+      border-left: 3px solid #4a9eff;
+      padding: 10px 14px;
+      margin: 12px 0 18px 0;
+      color: #d6d6d6;
+      background: rgba(74,158,255,0.08);
+      border-radius: 8px;
+    }
+    .muted { color: #b0b0b0; }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border: 1px solid #333;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      font-size: 0.9rem;
+      margin-right: 8px;
+    }
+    .footer {
+      padding: 22px 0;
+      border-top: 1px solid #333;
+      text-align: center;
+      color: #b0b0b0;
+    }
+    .toc {
+      margin: 14px 0 22px 0;
+      padding: 14px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+    }
+    .toc a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#transparency">Transparency</a>
+        <a href="#math">Math</a>
+        <a href="#variables">Variables</a>
+        <a href="#worked-example">Worked example</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h2>Bigeye Tuna — Full Transparency (v1)</h2>
+        <p class="muted"><span class="pill">Last updated: January 2026</span> <span class="pill">Live URL: <a href="https://primetimefishing.netlify.app/bigeye">primetimefishing.netlify.app/bigeye</a></span></p>
+
+        <p>
+          This page is designed to leave nothing out: the <strong>exact equations</strong>, every variable we use, the open-access URLs behind each driver, verbatim quotes (with page pointers where available), and a plain-English explanation of what is <strong>research-backed</strong> vs what is <strong>calibrated</strong>.
+        </p>
+
+        <div class="toc">
+          <strong>On this page</strong>
+          <ul>
+            <li><a href="#math">The exact math (Bigeye v1)</a></li>
+            <li><a href="#variables">Variables (research-backed vs calibrated)</a></li>
+            <li><a href="#calculation-methodology">Calculation methodology</a></li>
+            <li><a href="#environmental-variables">Environmental variables (verification)</a></li>
+            <li><a href="#worked-example">Worked examples</a></li>
+            <li><a href="#changelog">Model changelog</a></li>
+          </ul>
+        </div>
+
+        <h3 id="math">The exact math (Bigeye v1)</h3>
+        <p>Bigeye is an offshore <strong>all-day</strong> rating built from “lifts” that map into a 1.0–5.0 rating.</p>
+
+        <pre><code>L_ocean_raw = L_sst + L_chl
+L_ocean     = clamp(L_ocean_raw, -0.02, +0.02)   // small ocean cap (modulate, don't dominate)
+
+L_total_raw = L_phase + L_time_avg + L_ocean
+L_total     = clamp(L_total_raw, 0, L_REF)       // global clamp
+
+rating = 1 + 4 × (L_total / L_REF)               // where L_REF = 0.28</code></pre>
+
+        <p class="muted">
+          Important: Bigeye v1 is intentionally conservative, so it typically does not reach 1.0/5 or 5.0/5 in practice.
+        </p>
+
+        <h3 id="variables">Variables (what’s research-backed vs calibrated)</h3>
+        <p><strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources. <strong>Calibrated</strong> means we chose the exact curve shape/thresholds/weights/caps to produce a stable 1.0–5.0 score and to avoid overclaiming from region- or gear-specific studies.</p>
+
+        <h4 id="calculation-methodology">Moon phase (L_phase)</h4>
+        <p><strong>Research-backed:</strong> Jatmiko et al. (2016) report significant differences among moon phases with the <strong>highest average catch rate at full moon</strong> in their dataset.</p>
+        <p><strong>Source:</strong> <a href="https://ejournal.undip.ac.id/index.php/ijms/article/view/10245" target="_blank" rel="noopener noreferrer">Jatmiko et al. 2016 — ILMU KELAUTAN (open access)</a></p>
+        <blockquote>“The result showed that the average catch rate of bigeye tuna differed significantly among the moon phases. Tukey post-hoc tests showed that the average catch rate at full moon was the highest among the groups with around 0.3/100 hooks.” <span class="muted">(PDF p.1 / journal p.101)</span></blockquote>
+
+        <p><strong>Calibrated:</strong> the exact curve shape is a product choice (smoothness + stability). We implement a full-moon peak curve in code (<code>moonPhaseBoostBigeyeFull</code>) and scale it via:</p>
+        <pre><code>L_phase = (phaseBoostValue × phaseWeight / 2.0) × 0.26
+phaseWeight = 1.425</code></pre>
+
+        <h4>Night availability (L_time_avg)</h4>
+        <p><strong>Research-backed:</strong> tagging studies show strong diel vertical behavior (shallower at night).</p>
+        <p><strong>Source (open PDF):</strong> <a href="https://www.soest.hawaii.edu/pfrp/reprints/musyl_et_al_03.pdf" target="_blank" rel="noopener noreferrer">Musyl et al. 2003 — Bigeye vertical movements</a></p>
+        <blockquote>“At night, however, bigeye tuna generally restrict their vertical movements to the surface layer.” <span class="muted">(PDF p.2)</span></blockquote>
+
+        <p><strong>Calibrated:</strong> we translate this into a small, fixed all-day-average lift:</p>
+        <pre><code>nightAvailability = 0.38
+timeBiasAvg       = nightAvailability × 0.5   // assume ~50% of a day is night
+L_time_avg        = (timeBiasAvg / 0.4) × 0.03
+               = 0.01425</code></pre>
+
+        <h4>Oceanography (SST + chlorophyll-a/SSC) (L_ocean)</h4>
+        <p><strong>Research-backed:</strong> regional studies support SST and chlorophyll (or SSC proxies) as predictors/covariates for Bigeye catchability/habitat.</p>
+        <p><strong>Source (open PDF):</strong> <a href="https://spo.nmfs.noaa.gov/sites/default/files/syamsuddin.pdf" target="_blank" rel="noopener noreferrer">Syamsuddin et al. 2013 — Fishery Bulletin (open access)</a></p>
+        <blockquote>“SST was a more important oceanographic predictor of Bigeye Tuna catches than were the other environmental variables (SSHA and chlorophyll-a) in this region.” <span class="muted">(PDF p.10)</span></blockquote>
+
+        <p><strong>Calibrated:</strong> we keep the ocean effect small and capped, and apply a cold-water gate:</p>
+        <ul>
+          <li><strong>Ocean cap:</strong> <code>L_ocean = clamp(L_sst + L_chl, -0.02, +0.02)</code></li>
+          <li><strong>Missing-data rule:</strong> ocean block only applies when <strong>SST is present</strong>; CHL optional</li>
+          <li><strong>Cold gate:</strong> if <code>sstC &lt; 20°C</code>, we force <code>L_chl = 0.00</code></li>
+        </ul>
+
+        <h3 id="environmental-variables">Environmental variables (verification)</h3>
+        <p class="muted">This section highlights the key open-access quotes behind the SST/CHL bands used in Bigeye v1.</p>
+
+        <h4>SST anchors</h4>
+        <p><strong>Syamsuddin et al. 2013 (open PDF):</strong> <a href="https://spo.nmfs.noaa.gov/sites/default/files/syamsuddin.pdf" target="_blank" rel="noopener noreferrer">PDF</a></p>
+        <blockquote>“Our results indicate that Bigeye Tuna catches increased in areas with relatively low temperatures (24–27.5°C) and decreased at temperatures &gt;27.5°C (Fig. 6B).” <span class="muted">(PDF p.10)</span></blockquote>
+
+        <p><strong>Setiawati &amp; Miura 2014 (ResearchGate landing page):</strong> <a href="https://www.researchgate.net/publication/278968733_Sea_Surface_Temperature_and_Sea_Surface_Chlorophyll_in_Relation_to_Bigeye_Tuna_Fishery_in_the_Southern_Waters_off_Java_and_Bali" target="_blank" rel="noopener noreferrer">Link</a></p>
+        <blockquote>“Statistical analysis showed the optimum of SST for bigeye tuna is less than 29.1°C and more than 27.4°C.” <span class="muted">(Abstract)</span></blockquote>
+
+        <h4>Chlorophyll / SSC anchors</h4>
+        <blockquote>“High probabilities of Bigeye Tuna presence were observed … for chlorophyll-a levels ranging from 0.04 to 0.16 mg m–3.” <span class="muted">(Syamsuddin 2013, PDF p.8)</span></blockquote>
+        <blockquote>“In addition, the optimum value of SSC was 0.055 to 0.175 mg m-3.” <span class="muted">(Setiawati &amp; Miura 2014, Abstract)</span></blockquote>
+
+        <p><strong>Song et al. 2009 (open access PDF):</strong> <a href="https://openknowledge.fao.org/server/api/core/bitstreams/bc94d5de-ef27-4dc5-9d11-397bc5ccbc55/content" target="_blank" rel="noopener noreferrer">PDF</a></p>
+        <blockquote>“0.090–0.099μg·L−1” <span class="muted">(PDF p.12, Table 5; units note: μg/L = mg/m³)</span></blockquote>
+
+        <h3 id="worked-example">Worked examples (inputs → lifts → rating)</h3>
+        <h4>Best case (near full moon + favorable ocean)</h4>
+        <pre><code>Assume:
+f = 0.50  (Full Moon peak)
+SST = 27.5°C  → L_sst = +0.017
+CHL = 0.12 mg/m³ → L_chl = +0.010
+
+L_ocean_raw = 0.017 + 0.010 = 0.027 → capped to +0.020
+L_phase     = (1.0 × 1.425 / 2.0) × 0.26 = 0.185
+L_time_avg  = 0.014
+
+L_total_raw = 0.185 + 0.014 + 0.020 = 0.219
+rating      = 1 + 4 × (0.219 / 0.28) = 4.1/5</code></pre>
+
+        <h4>Low case (off-peak phase + cold water)</h4>
+        <pre><code>Assume:
+f = 0.00  (far from full; curve floor ≈ 0.2)
+SST = 17.0°C → L_sst = -0.010
+CHL ignored (cold gate below 20°C) → L_chl = 0.000
+
+L_ocean = -0.010
+L_phase = (0.2 × 1.425 / 2.0) × 0.26 = 0.037
+L_time_avg = 0.014
+
+L_total_raw = 0.037 + 0.014 - 0.010 = 0.041
+rating      = 1 + 4 × (0.041 / 0.28) = 1.6/5</code></pre>
+
+        <h3 id="changelog">Model changelog (Bigeye)</h3>
+        <ul>
+          <li><strong>2026-01:</strong> Published full transparency page (this page). No changes to scoring logic.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 PrimeBite Fishing</p>
+      <p><a href="index.html#privacy">Privacy Policy</a> | <a href="index.html#terms">Terms of Use</a></p>
+    </div>
+  </footer>
+</body>
+</html>
+
