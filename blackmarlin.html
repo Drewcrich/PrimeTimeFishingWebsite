@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeBite Fishing — Black Marlin Transparency</title>
+  <meta name="description" content="PrimeBite Fishing — Black Marlin full transparency: equations, variables, citations, exact quotes with page pointers, and calibration rationale.">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="canonical" href="https://primetimefishing.netlify.app/blackmarlin">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #e0e0e0;
+      background: #1a1a1a;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+    .header {
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+    .nav { display: flex; justify-content: center; gap: 1.1rem; padding: 1rem 0; flex-wrap: wrap; }
+    .nav a { color: #e0e0e0; text-decoration: none; font-weight: 600; }
+    .nav a:hover { color: #4a9eff; }
+    .section { padding: 44px 0; }
+    h2 { font-size: 2rem; margin-bottom: 16px; color: #fff; }
+    h3 { margin-top: 28px; margin-bottom: 12px; color: #fff; }
+    h4 { margin-top: 18px; margin-bottom: 10px; color: #fff; }
+    p { margin-bottom: 12px; }
+    ul { margin: 10px 0 16px 22px; }
+    li { margin-bottom: 6px; }
+    a { color: #4a9eff; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    pre {
+      background: #111827;
+      border: 1px solid #243041;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 12px 0 18px 0;
+    }
+    blockquote {
+      border-left: 3px solid #4a9eff;
+      padding: 10px 14px;
+      margin: 12px 0 18px 0;
+      color: #d6d6d6;
+      background: rgba(74,158,255,0.08);
+      border-radius: 8px;
+    }
+    .muted { color: #b0b0b0; }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border: 1px solid #333;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      font-size: 0.9rem;
+      margin-right: 8px;
+    }
+    .toc {
+      margin: 14px 0 22px 0;
+      padding: 14px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+    }
+    .footer {
+      padding: 22px 0;
+      border-top: 1px solid #333;
+      text-align: center;
+      color: #b0b0b0;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#transparency">Transparency</a>
+        <a href="#math">Math</a>
+        <a href="#variables">Variables</a>
+        <a href="#calculation-methodology">Methodology</a>
+        <a href="#environmental-variables">Environmental</a>
+        <a href="#worked-example">Worked example</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h2>Black Marlin — Full Transparency (v1)</h2>
+        <p class="muted"><span class="pill">Last updated: January 2026</span> <span class="pill">Live URL: <a href="https://primetimefishing.netlify.app/blackmarlin">primetimefishing.netlify.app/blackmarlin</a></span></p>
+
+        <p>
+          This page is designed to leave nothing out: the <strong>exact equations</strong>, every variable we use, the open-access URLs behind each driver, verbatim quotes (with page pointers where available), and a plain-English explanation of what is <strong>research-backed</strong> vs what is <strong>calibrated</strong>.
+        </p>
+
+        <div class="toc">
+          <strong>On this page</strong>
+          <ul>
+            <li><a href="#math">The exact math (Black Marlin v1)</a></li>
+            <li><a href="#variables">Variables (research-backed vs calibrated)</a></li>
+            <li><a href="#calculation-methodology">Calculation methodology</a></li>
+            <li><a href="#environmental-variables">Environmental variables (verification)</a></li>
+            <li><a href="#worked-example">Worked examples</a></li>
+            <li><a href="#changelog">Model changelog</a></li>
+          </ul>
+        </div>
+
+        <h3 id="math">The exact math (Black Marlin v1)</h3>
+        <p>Black Marlin is an offshore <strong>all-day</strong> rating built from “lifts” that map into a 1.0–5.0 rating.</p>
+
+        <pre><code>L_ocean_raw = L_sst
+L_ocean     = clamp(L_ocean_raw, -0.06, +0.02)   // SST-only ocean cap
+
+L_total_preSeason  = L_phase + L_overlap_avg + L_ocean
+L_total_postSeason = applySeasonalMultiplier(L_total_preSeason, seasonMult)
+
+L_total = clamp(L_total_postSeason, 0, L_REF)    // global clamp
+rating  = 1 + 4 × (L_total / L_REF)              // where L_REF = 0.28</code></pre>
+
+        <h3 id="variables">Variables (what’s research-backed vs calibrated)</h3>
+        <p><strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources. <strong>Calibrated</strong> means we chose the exact curve shape/thresholds/weights/caps to produce a stable 1.0–5.0 score and to avoid overclaiming from region- or gear-specific studies.</p>
+
+        <h3 id="calculation-methodology">Calculation Methodology (All‑day rating)</h3>
+        <p>This section is the “how it’s calculated” reference for Black Marlin v1.</p>
+        <pre><code>phaseBoostValue = moonPhaseBoostBlackMarlinQuarters(f)   // f in [0,1]
+L_phase         = (phaseBoostValue × phaseWeight / 2.0) × 0.31
+
+L_overlap_avg   = overlap(overlapMaxBoost × 0.4, overlapMaxBoost)
+
+// Ocean (SST only):
+// - If SST missing → ocean treated as neutral (0.00)
+L_ocean         = clamp(blackMarlinSstLift(sstC), -0.06, +0.02)
+
+// Seasonality:
+seasonMultRaw   = seasonalMultipliers[monthIndex]
+seasonMult      = clamp(seasonMultRaw, 0.9, 1.15)
+
+L_total         = clamp((L_phase + L_overlap_avg + L_ocean) × seasonMult, 0, 0.28)
+rating          = 1 + 4 × (L_total / 0.28)</code></pre>
+
+        <h3>Moon phase (quarter phases / “half-moons”)</h3>
+        <p><strong>Research-backed (GBR diaries):</strong> higher CPUE during half-moons and ~30–40% lower during new or full moons.</p>
+        <p><strong>Pepperell et al. 2025 (open access):</strong> <a href="https://doi.org/10.1093/icesjms/fsaf182" target="_blank" rel="noopener noreferrer">DOI</a> • <a href="https://academic.oup.com/icesjms/article-pdf/82/10/fsaf182/64724324/fsaf182.pdf" target="_blank" rel="noopener noreferrer">PDF</a></p>
+        <blockquote>“Moon phase had a non-linear relationship with higher CPUE during a half moon and approximately 30%–40% lower during new or full moons (Fig. 7e).”</blockquote>
+
+        <h3>Seasonality (GBR timing)</h3>
+        <p><strong>Research-backed:</strong> a GBR spawning aggregation forms in Oct–Nov; the charter season is Sep–Dec with peak CPUE Oct–Nov.</p>
+        <p><strong>Domeier &amp; Speare 2012 (open access):</strong> <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0031629" target="_blank" rel="noopener noreferrer">PLOS ONE full text</a></p>
+        <p><strong>Calibrated:</strong> exact multipliers (GBR-timed, applied globally as a modeling choice): Sep/Dec ×1.05; Oct/Nov ×1.10; all other months ×1.00.</p>
+
+        <h3 id="environmental-variables">Environmental variables (verification)</h3>
+        <p>This section documents <strong>what the papers say</strong> (verbatim quotes) and then shows how PrimeBite maps that into a stable rating (calibrated thresholds + caps).</p>
+
+        <h4>SST (SST-only ocean block)</h4>
+        <p><strong>Setyadji &amp; Fahmi 2020 (open access):</strong> <a href="https://doi.org/10.15578/ifrj.26.1.2020.41-49" target="_blank" rel="noopener noreferrer">DOI</a> • <a href="http://ejournal-balitbang.kkp.go.id/index.php/ifrj/article/download/8158/6692" target="_blank" rel="noopener noreferrer">PDF</a></p>
+        <blockquote>“In this study, high CPUE occurred between 29–31°C...”</blockquote>
+        <blockquote>“... SST and SSH were statistically significant when incorporated into the models, but it allegedly wasn’t the main driver...”</blockquote>
+
+        <p><strong>Calibrated (exact rules used in-app):</strong></p>
+        <ul>
+          <li><strong>Missing SST:</strong> treat ocean as neutral (<code>L_ocean = 0.00</code>).</li>
+          <li><strong>Ocean cap:</strong> <code>L_ocean = clamp(L_sst, -0.06, +0.02)</code>.</li>
+          <li><strong>Cold penalties:</strong> <code>&lt;18°C → -0.06</code>; <code>18–22°C → -0.03</code> (explicit modeling choice).</li>
+          <li><strong>Warm bonuses:</strong> <code>29–31°C → +0.02</code>; <code>28–32°C → +0.01</code> (loosely anchored to the “29–31°C” note).</li>
+        </ul>
+
+        <h3 id="worked-example">Worked examples (inputs → lifts → rating)</h3>
+        <h4>Best case</h4>
+        <pre><code>Assume:
+phaseBoostValue = 1.0 (quarter-phase peak)
+seasonMult = 1.10 (Oct/Nov)
+SST = 30°C → L_sst = +0.02 → L_ocean = +0.02 (cap)
+
+L_total_preSeason  ≈ L_phase + L_overlap_avg + 0.02
+L_total_postSeason = L_total_preSeason × 1.10
+Global clamp allows 5.0/5 only when L_total reaches L_REF = 0.28</code></pre>
+
+        <h4>Cold water</h4>
+        <pre><code>Assume:
+SST = 17°C → L_sst = -0.06 → L_ocean = -0.06
+seasonMult = 1.00 (most months)
+
+Cold penalty can materially lower the rating and supports reaching 1.0/5 in clearly non-viable water (after clamping).</code></pre>
+
+        <h3 id="changelog">Model changelog (Black Marlin)</h3>
+        <ul>
+          <li><strong>2026-01:</strong> Published full transparency page (this page). No changes to scoring logic.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 PrimeBite Fishing</p>
+      <p><a href="index.html#privacy">Privacy Policy</a> | <a href="index.html#terms">Terms of Use</a></p>
+    </div>
+  </footer>
+</body>
+</html>
+
