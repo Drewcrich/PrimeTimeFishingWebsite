@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeBite Fishing — Walleye Transparency</title>
+  <meta name="description" content="PrimeBite Fishing — Walleye full transparency: equations, variables, citations, exact quotes with page pointers, and calibration rationale.">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="canonical" href="https://primetimefishing.netlify.app/walleye">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #e0e0e0;
+      background: #1a1a1a;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+    .header {
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+    .nav { display: flex; justify-content: center; gap: 1.25rem; padding: 1rem 0; flex-wrap: wrap; }
+    .nav a { color: #e0e0e0; text-decoration: none; font-weight: 600; }
+    .nav a:hover { color: #4a9eff; }
+    .section { padding: 44px 0; }
+    h1 { font-size: 2rem; line-height: 1.2; color: #fff; margin-bottom: 10px; }
+    h2 { font-size: 1.6rem; color: #fff; margin: 28px 0 12px; }
+    h3 { font-size: 1.2rem; color: #4a9eff; margin: 20px 0 10px; }
+    p { margin-bottom: 12px; color: #b0b0b0; }
+    ul { margin: 8px 0 16px 20px; color: #b0b0b0; }
+    li { margin-bottom: 6px; }
+    a { color: #4a9eff; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    pre {
+      background: #121212;
+      border: 1px solid #333;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 10px 0 16px;
+      color: #e0e0e0;
+    }
+    blockquote {
+      background: #2a2a2a;
+      border-left: 4px solid #4a9eff;
+      padding: 12px;
+      margin: 10px 0 16px;
+      border-radius: 6px;
+      color: #e0e0e0;
+    }
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 10px;
+      border: 1px solid #333;
+      border-radius: 999px;
+      margin-right: 8px;
+      color: #b0b0b0;
+      background: #202020;
+    }
+    .toc {
+      margin: 14px 0 22px 0;
+      padding: 14px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: #b0b0b0;
+    }
+    .toc strong { color: #e0e0e0; }
+    .footer { border-top: 1px solid #333; padding: 20px 0; color: #666; text-align: center; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/#transparency">Transparency</a>
+        <a href="#math">Math</a>
+        <a href="#variables">Variables</a>
+        <a href="#example">Worked example</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <span class="pill">PrimeBite Fishing</span>
+      <span class="pill">Walleye</span>
+      <span class="pill">Full Transparency</span>
+
+      <h1>Walleye — Full Transparency (v1)</h1>
+      <p><em>Last updated: January 2026</em></p>
+
+      <p>
+        This page is designed to leave nothing out: the exact equations, every variable we use, the open-access URLs behind each driver,
+        verbatim quotes (with page pointers where available), and a plain-English explanation of what is research-backed vs what is calibrated.
+      </p>
+
+      <div class="toc">
+        <strong>On this page</strong>
+        <ul>
+          <li><a href="#math">The exact math (Walleye v1)</a></li>
+          <li><a href="#variables">Variables (research-backed vs calibrated)</a></li>
+          <li><a href="#calculation-methodology">Calculation methodology</a></li>
+          <li><a href="#verification">Key definitions & verification sources</a></li>
+          <li><a href="#example">Worked example</a></li>
+          <li><a href="#changelog">Model changelog</a></li>
+        </ul>
+      </div>
+
+      <h2 id="math">The exact math (Walleye v1)</h2>
+      <p>
+        Walleye is a freshwater <strong>Major/Minor-window</strong> rating: each solunar window gets a 1.0–5.0 score,
+        and the day score is the duration-weighted average of those window scores.
+      </p>
+
+      <pre><code>// Lift-to-rating map (global)
+L_total_clamped = clamp(L_total, 0, L_REF)          // where L_REF = 0.28
+rating = 1 + 4 × (L_total_clamped / L_REF)          // then clamped to [1.0, 5.0]
+
+// Walleye window lift (per Major/Minor window)
+L_total_raw = L_base + L_phase + L_overlap + L_time // (wind/precip/pressure disabled for Walleye v1)
+
+// Seasonality multiplier (capped)
+L_total = clamp(L_total_raw × seasonMult, 0, L_REF) // seasonMult capped to 1.15</code></pre>
+
+      <p>
+        Key idea: <strong>research chooses the drivers</strong> (what matters), then we <strong>calibrate</strong> the exact sizes and caps so the output
+        is stable, explainable, and consistently mapped into 1.0–5.0.
+      </p>
+
+      <h2 id="calculation-methodology">Calculation methodology</h2>
+      <p>
+        This is the “how it’s calculated” reference for Walleye v1.
+      </p>
+
+      <pre><code>Step 1) Base lift (Majors/Minors)
+L_base = 0.10 for Major (moon overhead/underfoot)
+L_base = 0.04 for Minor (moonrise/moonset)
+
+Step 2) Moon phase lift
+phaseBoostValue = moonPhaseBoostWalleyeGibbous(moonPhasePosition)
+L_phase = (phaseBoostValue × phaseWeight / 2.0) × 0.05     // phaseWeight = 2.0 (calibrated)
+
+Step 3) Dawn/dusk overlap lift (civil twilight overlap)
+overlap_fraction = overlap(period, civil_twilight_window)  // 0.0..1.0
+L_overlap = 0.07 × overlap_fraction                        // 0..0.07 (calibrated ceiling)
+
+Step 4) Time lift (low-light + cloud-cover proxy)
+timeBias = lowLightBias + cloudCoverBias                   // capped by design (calibrated knobs)
+L_time = (timeBias / 0.40) × 0.03                          // small by design
+
+Step 5) Apply seasonal multiplier
+L_total = clamp((L_base + L_phase + L_overlap + L_time) × seasonMult, 0, L_REF)
+
+Step 6) Lift → rating
+rating = 1 + 4 × (L_total / 0.28)</code></pre>
+
+      <h2 id="variables">Variables (what’s research-backed vs calibrated)</h2>
+      <p>
+        <strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources.
+        <strong>Calibrated</strong> means we chose the exact thresholds/weights/caps to make a stable 1–5 score and to avoid dominance/double-counting.
+      </p>
+
+      <h3>Moon position (Majors/Minors) (L_base)</h3>
+      <p><strong>Research-backed:</strong> Walleye trip success is ~10–12% higher when the moon is overhead/underfoot.</p>
+      <p><strong>Calibrated:</strong> mapping “~10–12%” into a lift constant (0.10 for Majors, 0.04 for Minors).</p>
+      <p><strong>Source (open access):</strong> <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0257882" target="_blank" rel="noopener noreferrer">Shaw et al. 2021 — PLOS ONE</a></p>
+      <blockquote>
+        “Anglers were observed to be about 10–12% more likely to be successful when the moon was overhead or underfoot…”
+        <br><br>
+        <em>(PDF p.13)</em>
+      </blockquote>
+
+      <h3>Moon phase (L_phase)</h3>
+      <p><strong>Research-backed:</strong> gibbous phases highest; quarter phases lowest (ordering used).</p>
+      <p><strong>Calibrated:</strong> exact curve shape and phaseWeight magnitude (2.0).</p>
+      <p><strong>Source (open access):</strong> <a href="https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0257882&amp;type=printable" target="_blank" rel="noopener noreferrer">Shaw et al. 2021 — PDF (printable)</a></p>
+      <blockquote>
+        “The odds of a successful trip were highest during the gibbous phases… and lowest during the quarter phases…”
+        <br><br>
+        <em>(PDF p.13)</em>
+      </blockquote>
+
+      <h3>Low-light / crepuscular timing (L_time)</h3>
+      <p><strong>Research-backed:</strong> dusk and dawn are better than day; lower light improves success.</p>
+      <p><strong>Calibrated:</strong> the maximum lift size and the exact dawn/dusk window used for scoring (see verification section for the window definition source).</p>
+      <p><strong>Source (open access):</strong> <a href="https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0257882&amp;type=printable" target="_blank" rel="noopener noreferrer">Shaw et al. 2021 — PDF (printable)</a></p>
+      <blockquote>
+        “…The predicted odds of a successful trip was highest at dusk … followed by dawn … and then day …”
+        <br><br>
+        <em>(PDF p.8)</em>
+      </blockquote>
+      <blockquote>
+        “…increased as light conditions decreased (i.e., decreasing solar radiation and the diel periods of dawn or dusk relative to daytime).”
+        <br><br>
+        <em>(PDF p.25)</em>
+      </blockquote>
+
+      <h3>Cloud cover (proxy for solar radiation) (part of L_time)</h3>
+      <p><strong>Research-backed:</strong> mean daily solar radiation negatively affects trip success; authors treat solar radiation as influenced by cloud cover.</p>
+      <p><strong>Calibrated:</strong> mapping cloud cover % to a small lift (we keep it conservative).</p>
+      <p><strong>Source (open access):</strong> <a href="https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0257882&amp;type=printable" target="_blank" rel="noopener noreferrer">Shaw et al. 2021 — PDF (printable)</a></p>
+      <blockquote>
+        “Mean daily solar radiation had a negative effect on walleye trip success… The observed percent of successful trips tended to increase with decreasing solar intensity …”
+        <br><br>
+        <em>(PDF p.11)</em>
+      </blockquote>
+      <blockquote>
+        “Solar radiation is influenced by solar altitude as well as cloud cover… Thus, mean daily solar radiation was assumed to represent cloud cover as well as seasonal or diel differences in solar intensity…”
+        <br><br>
+        <em>(PDF p.5)</em>
+      </blockquote>
+
+      <h3>Dawn/dusk overlap with bite windows (L_overlap)</h3>
+      <p><strong>Research-backed:</strong> low-light periods improve success (Shaw 2021), so overlap with dawn/dusk is meaningful.</p>
+      <p><strong>Calibrated:</strong> how overlap maps into points (ceiling 0.07) and the overlap mapping ceiling in the profile.</p>
+      <p><strong>Verification source:</strong> civil twilight definition (NOAA/NWS) is used so “dawn/dusk overlap” is a standard astronomical window.</p>
+
+      <h3>Seasonality multiplier (seasonMult)</h3>
+      <p><strong>Research-backed:</strong> Walleye vulnerability/effort/catch commonly peak in spring and shift through the year in open-access regional sources.</p>
+      <p><strong>Calibrated:</strong> monthly multipliers and the global cap (1.15) used to keep seasonality meaningful but not dominant.</p>
+      <p><strong>Sources (open PDFs):</strong></p>
+      <ul>
+        <li><a href="https://www.researchgate.net/profile/Michael-Hansen-44/publication/233201382_Temporal_Profiles_of_Walleye_Angling_Effort_Harvest_Rate_and_Harvest_in_Northern_Wisconsin_Lakes/links/546389d30cf2cb7e9da989d6/Temporal-Profiles-of-Walleye-Angling-Effort-Harvest-Rate-and-Harvest-in-Northern-Wisconsin-Lakes.pdf" target="_blank" rel="noopener noreferrer">Deroba et al. 2007 — Northern Wisconsin seasonality</a></li>
+        <li><a href="https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1063&amp;context=ncfwrustaff" target="_blank" rel="noopener noreferrer">Pope &amp; Willis 1996 — seasonal CPUE patterns</a></li>
+      </ul>
+
+      <h3>Weather (wind/precip/pressure)</h3>
+      <p><strong>Research-backed (decision to exclude):</strong> Shaw 2021 highlights wind direction (not wind speed) as highly weighted; precip/pressure were not highly weighted.</p>
+      <p><strong>Calibrated/product choice:</strong> Walleye v1 does not apply wind/precip/pressure adjustments globally until effect sizes and generality are better supported.</p>
+
+      <h2 id="verification">Key definitions & verification sources</h2>
+      <p>
+        Some items are not “Walleye biology claims” — they are definitions needed for correct implementation.
+      </p>
+
+      <h3>Moon phase vs illuminated fraction</h3>
+      <p><strong>Why it matters:</strong> quarter phases can have similar illumination but different phase position; the Walleye phase model is based on phase position.</p>
+      <p><strong>Source (open access):</strong> <a href="https://classic.yarnpkg.com/en/package/suncalc" target="_blank" rel="noopener noreferrer">SunCalc docs (phase definition)</a></p>
+      <blockquote>
+        “Moon phase value should be interpreted like this: … 0 | New Moon … 0.25 | First Quarter … 0.5 | Full Moon … 0.75 | Last Quarter …”
+      </blockquote>
+
+      <h3>Dawn/dusk window definition (±30 minutes)</h3>
+      <p><strong>Used for:</strong> the low-light window used by Walleye v1.</p>
+      <p><strong>Source (open access):</strong> <a href="https://minds.wisconsin.edu/handle/1793/85172" target="_blank" rel="noopener noreferrer">Vasquez 2024 — UWSP thesis</a></p>
+      <blockquote>
+        “Observations 30 mins before and after sunrise were classified as dawn and observations 30 mins before and after sunset were classified as dusk.”
+        <br><br>
+        <em>(printed p.30)</em>
+      </blockquote>
+
+      <h3>Civil twilight definition (sun altitude −6°)</h3>
+      <p><strong>Used for:</strong> computing overlap_fraction for the overlap lift.</p>
+      <p><strong>Source (open access):</strong> <a href="https://www.weather.gov/fsd/twilight" target="_blank" rel="noopener noreferrer">NWS/NOAA — Twilight definitions</a></p>
+      <blockquote>
+        “Morning civil twilight begins when the geometric center of the sun is 6 degrees below the horizon, and ends at sunrise.
+        Evening civil twilight begins at sunset, and ends when the geometric center of the sun is 6 degrees below the horizon.”
+      </blockquote>
+
+      <h2 id="example">Worked example (inputs → lifts → rating)</h2>
+      <p>
+        This is a “math-complete” example showing how the model reaches a high rating under strong conditions.
+        Real outputs depend on the actual window timings and local sunrise/sunset.
+      </p>
+
+      <h3>Example: strong Major window (can approach 5.0/5)</h3>
+      <ul>
+        <li><strong>Major</strong> window: L_base = 0.10</li>
+        <li><strong>Peak gibbous</strong> phase: L_phase ≈ 0.05 (calibrated magnitude)</li>
+        <li><strong>Full civil twilight overlap</strong>: overlap_fraction = 1.0 → L_overlap = 0.07</li>
+        <li><strong>Max low-light</strong>: L_time_lowlight = (0.20 / 0.40) × 0.03 = 0.015</li>
+        <li><strong>Cloud cover</strong> = 100%: L_time_clouds = (0.05 / 0.40) × 0.03 ≈ 0.004</li>
+        <li><strong>Sum</strong>: L_total_raw ≈ 0.10 + 0.05 + 0.07 + 0.015 + 0.004 = 0.239</li>
+        <li><strong>Season</strong>: May seasonMult = 1.15 → L_total ≈ 0.239 × 1.15 = 0.275</li>
+        <li><strong>Rating</strong>: 1 + 4 × (0.275 / 0.28) ≈ <strong>4.9/5</strong></li>
+      </ul>
+
+      <h2 id="changelog">Model changelog (Walleye)</h2>
+      <ul>
+        <li><strong>2026-01</strong>: Published Walleye full transparency page (this page) and linked it from the app.</li>
+        <li><strong>2026-01</strong>: Implemented civil-twilight overlap (definition-based dawn/dusk overlap, not arbitrary minutes) when lat/lon are available.</li>
+        <li><strong>2026-01</strong>: Added a small dusk-over-dawn weighting and a conservative cloud-cover proxy term (direction research-backed; mapping calibrated).</li>
+      </ul>
+
+      <h2>Canonical doc source</h2>
+      <p>
+        The canonical version of this content lives in the PrimeBite app repository docs (and is mirrored here for public transparency):
+      </p>
+      <ul>
+        <li><code>docs/WALLEYE_CALCULATIONS.md</code></li>
+        <li><code>docs/WALLEYE_VARIABLES_FACTCHECK.md</code></li>
+      </ul>
+
+      <div class="footer">
+        PrimeBite Fishing — Transparency pages are living documents. If you spot an error, please report it.
+      </div>
+    </div>
+  </main>
+</body>
+</html>
