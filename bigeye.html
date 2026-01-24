@@ -79,6 +79,33 @@
       background: rgba(255,255,255,0.03);
     }
     .toc a { text-decoration: none; }
+    .print-button {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4a9eff;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+    .print-button:hover {
+      background: #3a8eef;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 158, 255, 0.4);
+    }
+    @media print {
+      .header, .print-button { display: none; }
+      body { background: #fff; color: #000; }
+      .container { max-width: 100%; }
+      a { color: #000; text-decoration: underline; }
+      pre, blockquote { page-break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
@@ -136,7 +163,7 @@ rating = 1 + 4 × (L_total / L_REF)               // where L_REF = 0.28</code></
         <h3 id="variables">Variables (what’s research-backed vs calibrated)</h3>
         <p><strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources. <strong>Calibrated</strong> means we chose the exact curve shape/thresholds/weights/caps to produce a stable 1.0–5.0 score and to avoid overclaiming from region- or gear-specific studies.</p>
 
-        <h4 id="calculation-methodology">Moon phase (L_phase)</h4>
+        <h4 id="var-moon-phase">Moon phase (L_phase)</h4>
         <p><strong>Research-backed:</strong> Jatmiko et al. (2016) report significant differences among moon phases with the <strong>highest average catch rate at full moon</strong> in their dataset.</p>
         <p><strong>Source:</strong> <a href="https://ejournal.undip.ac.id/index.php/ijms/article/view/10245" target="_blank" rel="noopener noreferrer">Jatmiko et al. 2016 — ILMU KELAUTAN (open access)</a></p>
         <blockquote>“The result showed that the average catch rate of bigeye tuna differed significantly among the moon phases. Tukey post-hoc tests showed that the average catch rate at full moon was the highest among the groups with around 0.3/100 hooks.” <span class="muted">(PDF p.1 / journal p.101)</span></blockquote>
@@ -145,7 +172,7 @@ rating = 1 + 4 × (L_total / L_REF)               // where L_REF = 0.28</code></
         <pre><code>L_phase = (phaseBoostValue × phaseWeight / 2.0) × 0.26
 phaseWeight = 1.425</code></pre>
 
-        <h4>Night availability (L_time_avg)</h4>
+        <h4 id="var-night">Night availability (L_time_avg)</h4>
         <p><strong>Research-backed:</strong> tagging studies show strong diel vertical behavior (shallower at night).</p>
         <p><strong>Source (open PDF):</strong> <a href="https://www.soest.hawaii.edu/pfrp/reprints/musyl_et_al_03.pdf" target="_blank" rel="noopener noreferrer">Musyl et al. 2003 — Bigeye vertical movements</a></p>
         <blockquote>“At night, however, bigeye tuna generally restrict their vertical movements to the surface layer.” <span class="muted">(PDF p.2)</span></blockquote>
@@ -156,7 +183,7 @@ timeBiasAvg       = nightAvailability × 0.5   // assume ~50% of a day is night
 L_time_avg        = (timeBiasAvg / 0.4) × 0.03
                = 0.01425</code></pre>
 
-        <h4>Oceanography (SST + chlorophyll-a/SSC) (L_ocean)</h4>
+        <h4 id="var-oceanography">Oceanography (SST + chlorophyll-a/SSC) (L_ocean)</h4>
         <p><strong>Research-backed:</strong> regional studies support SST and chlorophyll (or SSC proxies) as predictors/covariates for Bigeye catchability/habitat.</p>
         <p><strong>Source (open PDF):</strong> <a href="https://spo.nmfs.noaa.gov/sites/default/files/syamsuddin.pdf" target="_blank" rel="noopener noreferrer">Syamsuddin et al. 2013 — Fishery Bulletin (open access)</a></p>
         <blockquote>“SST was a more important oceanographic predictor of Bigeye Tuna catches than were the other environmental variables (SSHA and chlorophyll-a) in this region.” <span class="muted">(PDF p.10)</span></blockquote>
@@ -226,6 +253,28 @@ rating      = 1 + 4 × (0.041 / 0.28) = 1.6/5</code></pre>
       <p><a href="index.html#privacy">Privacy Policy</a> | <a href="index.html#terms">Terms of Use</a></p>
     </div>
   </footer>
+
+  <button class="print-button" onclick="window.print()" aria-label="Print this page">
+    📄 Print / Save PDF
+  </button>
+
+  <script>
+    // Update TOC to include variable anchor links
+    document.addEventListener('DOMContentLoaded', function() {
+      const variablesSection = document.querySelector('.toc a[href="#variables"]').parentElement;
+      if (variablesSection && variablesSection.tagName === 'LI') {
+        const subList = document.createElement('ul');
+        subList.style.marginLeft = '20px';
+        subList.style.fontSize = '0.9em';
+        subList.innerHTML = `
+          <li><a href="#var-moon-phase">Moon phase (full moon peak)</a></li>
+          <li><a href="#var-night">Night availability</a></li>
+          <li><a href="#var-oceanography">Oceanography (SST + chlorophyll)</a></li>
+        `;
+        variablesSection.appendChild(subList);
+      }
+    });
+  </script>
 </body>
 </html>
 
