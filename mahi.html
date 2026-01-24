@@ -78,6 +78,33 @@
       text-align: center;
       color: #b0b0b0;
     }
+    .print-button {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4a9eff;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+    .print-button:hover {
+      background: #3a8eef;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 158, 255, 0.4);
+    }
+    @media print {
+      .header, .print-button { display: none; }
+      body { background: #fff; color: #000; }
+      .container { max-width: 100%; }
+      a { color: #000; text-decoration: underline; }
+      pre, blockquote { page-break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
@@ -151,7 +178,7 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
         <h3 id="variables">Variables (what’s research-backed vs calibrated)</h3>
         <p><strong>Research-backed</strong> means the driver/pattern/mechanism is supported by open-access sources. <strong>Calibrated</strong> means we chose the exact curve shape/thresholds/weights/caps to produce a stable 1.0–5.0 score and to avoid overclaiming from region- or gear-specific studies.</p>
 
-        <h4>Moon phase (L_phase)</h4>
+        <h4 id="var-moon-phase">Moon phase (L_phase)</h4>
         <p><strong>Research-backed:</strong> an open-access offshore tournament summary reports Dolphinfish (Mahi‑mahi) catch-rate peak at <strong>First Quarter</strong>.</p>
         <p><strong>Source (open PDF):</strong> <a href="https://ncseagrant.ncsu.edu/coastwatch/wp-content/uploads/sites/13/2020/12/WinterHookLineScience.pdf" target="_blank" rel="noopener noreferrer">NC Sea Grant — Hook, Line &amp; Science (Winter 2020)</a></p>
         <blockquote>“Scientists found a relationship between catch rates and lunar phase for 5 of the 8 species as shown here…<br>Dolphinfish first quarter” <span class="muted">(PDF p.2)</span></blockquote>
@@ -163,7 +190,7 @@ phaseWeight = 1.33</code></pre>
         <h4>Average dawn/dusk opportunity (L_overlap_avg) — modeling assumption</h4>
         <p>Offshore day ratings don’t use time windows. For non‑Yellowfin offshore species we include a small fixed overlap lift so overlap isn’t implicitly treated as 0 in a 24‑hour score. This is a <strong>modeling/UX assumption</strong> (not claimed as a research effect size).</p>
 
-        <h4>Night availability (L_time_avg)</h4>
+        <h4 id="var-night">Night availability (L_time_avg)</h4>
         <p><strong>Research-backed (context):</strong> Mahi spawning events are predicted to occur at night and chiefly at the new moon phase (context; not a universal CPUE effect-size study).</p>
         <p><strong>Source (open access):</strong> <a href="https://www.frontiersin.org/articles/10.3389/fmars.2021.626082/pdf" target="_blank" rel="noopener noreferrer">Schlenker et al. 2021 — Frontiers in Marine Science (PDF)</a></p>
         <p><strong>Calibrated:</strong> we translate diel context into a small fixed all‑day average lift using <code>nightAvailability = 0.285</code> and assume ~50% of a day is night.</p>
@@ -171,7 +198,7 @@ phaseWeight = 1.33</code></pre>
         <h3 id="environmental-variables">Environmental Variables (Verification)</h3>
         <p>This section documents <strong>what the papers say</strong> (verbatim quotes with page pointers) and then shows exactly how PrimeBite maps that into a stable rating (calibrated thresholds + caps).</p>
 
-        <h4>Oceanography (SST + chlorophyll‑a) (L_ocean)</h4>
+        <h4 id="var-oceanography">Oceanography (SST + chlorophyll‑a) (L_ocean)</h4>
         <p><strong>Research-backed:</strong> multiple open-access studies show SST and chlorophyll-a covary with dolphinfish/mahi CPUE/habitat, but ranges are region-dependent.</p>
 
         <p><strong>SST anchors:</strong></p>
@@ -231,6 +258,29 @@ Ocean cap allows strong negative influence to reach 1.0/5 in clearly non-viable 
       <p><a href="index.html#privacy">Privacy Policy</a> | <a href="index.html#terms">Terms of Use</a></p>
     </div>
   </footer>
+
+  <button class="print-button" onclick="window.print()" aria-label="Print this page">
+    📄 Print / Save PDF
+  </button>
+
+  <script>
+    // Update TOC to include variable anchor links
+    document.addEventListener('DOMContentLoaded', function() {
+      const variablesSection = document.querySelector('.toc a[href="#variables"]').parentElement;
+      if (variablesSection && variablesSection.tagName === 'LI') {
+        const subList = document.createElement('ul');
+        subList.style.marginLeft = '20px';
+        subList.style.fontSize = '0.9em';
+        subList.innerHTML = `
+          <li><a href="#var-moon-phase">Moon phase</a></li>
+          <li><a href="#var-overlap">Average dawn/dusk opportunity</a></li>
+          <li><a href="#var-night">Night availability</a></li>
+          <li><a href="#var-oceanography">Oceanography (SST + chlorophyll)</a></li>
+        `;
+        variablesSection.appendChild(subList);
+      }
+    });
+  </script>
 </body>
 </html>
 
