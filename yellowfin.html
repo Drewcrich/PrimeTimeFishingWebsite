@@ -75,6 +75,33 @@
     }
     .toc strong { color: #e0e0e0; }
     .footer { border-top: 1px solid #333; padding: 20px 0; color: #666; text-align: center; }
+    .print-button {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4a9eff;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+    .print-button:hover {
+      background: #3a8eef;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 158, 255, 0.4);
+    }
+    @media print {
+      .header, .print-button { display: none; }
+      body { background: #fff; color: #000; }
+      .container { max-width: 100%; }
+      a { color: #000; text-decoration: underline; }
+      pre, blockquote { page-break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
@@ -153,7 +180,7 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
         <strong>Calibrated</strong> means we chose the exact thresholds/weights/caps to make a stable 1–5 score and to avoid double-counting.
       </p>
 
-      <h3>Moon phase (L_phase)</h3>
+      <h3 id="var-moon-phase">Moon phase (L_phase)</h3>
       <p><strong>Research-backed:</strong> an open-access offshore tournament summary reports Yellowfin catch-rate peak at <strong>First Quarter</strong>.</p>
       <p><strong>Calibrated:</strong> the exact smooth curve shape is a product choice (continuity + stability).</p>
       <p><strong>Source (open PDF):</strong> <a href="https://ncseagrant.ncsu.edu/coastwatch/wp-content/uploads/sites/13/2020/12/WinterHookLineScience.pdf" target="_blank" rel="noopener noreferrer">NC Sea Grant — Hook, Line &amp; Science (Winter 2020)</a></p>
@@ -164,7 +191,7 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
         <em>(PDF p.2)</em>
       </blockquote>
 
-      <h3>Lunar illumination (L_illum)</h3>
+      <h3 id="var-lunar-illumination">Lunar illumination (L_illum)</h3>
       <p><strong>Research-backed:</strong> Yellowfin night depth varies with illumination.</p>
       <p><strong>Calibrated:</strong> lift sizes are conservative; illumination is modeled separately from phase.</p>
       <p><strong>Source (open PDF):</strong> <a href="https://nora.nerc.ac.uk/id/eprint/529586/1/fmars-08-664593.pdf" target="_blank" rel="noopener noreferrer">Wright et al. 2021 — Frontiers in Marine Science</a></p>
@@ -192,7 +219,7 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
         <em>(PDF p.1540)</em>
       </blockquote>
 
-      <h3>Chlorophyll-a (CHL) (L_chl)</h3>
+      <h3 id="var-chlorophyll">Chlorophyll-a (CHL) (L_chl)</h3>
       <p><strong>Research-backed:</strong> open-access response curves support a productive chlorophyll band for Yellowfin presence.</p>
       <p><strong>Calibrated:</strong> we keep CHL lifts capped and conservative to avoid coastal “false highs.”</p>
       <p><strong>Source (open PDF):</strong> <a href="https://bioflux.com.ro/docs/2025.1532-1546.pdf" target="_blank" rel="noopener noreferrer">Siregar et al. 2025 — AACL Bioflux</a></p>
@@ -202,7 +229,7 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
         <em>(PDF p.1540)</em>
       </blockquote>
 
-      <h3>Fronts/edges (gradients) (L_gradient)</h3>
+      <h3 id="var-gradients">Fronts/edges (gradients) (L_gradient)</h3>
       <p><strong>Research-backed:</strong> Yellowfin habitat suitability is linked to mesoscale oceanographic features and boundary regions between eddies.</p>
       <p><strong>Calibrated:</strong> our gradient thresholds are heuristics (kept small) because papers don’t provide universal °C/10km thresholds.</p>
       <p><strong>Source (open access):</strong> <a href="https://www.nature.com/articles/s41598-024-58613-7" target="_blank" rel="noopener noreferrer">Ramírez‑Mendoza et al. 2024 — Scientific Reports</a></p>
@@ -257,6 +284,30 @@ Rating  = 1 + 4 × (L_total / 0.28)</code></pre>
       <p>&copy; 2026 PrimeBite Fishing • <a href="/#transparency">Transparency</a> • <a href="/#privacy">Privacy</a></p>
     </div>
   </footer>
+
+  <button class="print-button" onclick="window.print()" aria-label="Print this page">
+    📄 Print / Save PDF
+  </button>
+
+  <script>
+    // Update TOC to include variable anchor links
+    document.addEventListener('DOMContentLoaded', function() {
+      const variablesSection = document.querySelector('.toc a[href="#variables"]').parentElement;
+      if (variablesSection && variablesSection.tagName === 'LI') {
+        const subList = document.createElement('ul');
+        subList.style.marginLeft = '20px';
+        subList.style.fontSize = '0.9em';
+        subList.innerHTML = `
+          <li><a href="#var-moon-phase">Moon phase</a></li>
+          <li><a href="#var-lunar-illumination">Lunar illumination</a></li>
+          <li><a href="#var-sst">Sea surface temperature (SST)</a></li>
+          <li><a href="#var-chlorophyll">Chlorophyll-a (CHL)</a></li>
+          <li><a href="#var-gradients">Fronts/edges (gradients)</a></li>
+        `;
+        variablesSection.appendChild(subList);
+      }
+    });
+  </script>
 </body>
 </html>
 
