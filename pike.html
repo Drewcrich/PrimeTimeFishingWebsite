@@ -75,6 +75,8 @@
       color: #b0b0b0;
     }
     .toc strong { color: #e0e0e0; }
+    .toc ul ul { margin: 6px 0 6px 20px; padding-left: 0; list-style-type: circle; }
+    .toc ul ul li { margin-bottom: 4px; }
     .footer { border-top: 1px solid #333; padding: 20px 0; color: #666; text-align: center; }
     .print-button {
       position: fixed;
@@ -137,7 +139,15 @@
         <strong>On this page</strong>
         <ul>
           <li><a href="#math">The exact math (Northern Pike v1)</a></li>
-          <li><a href="#variables">Variables (research-backed vs calibrated)</a></li>
+          <li>
+            <a href="#variables">Variables (research-backed vs calibrated)</a>
+            <ul>
+              <li><a href="#var-moon-phase">Moon phase</a></li>
+              <li><a href="#var-wind">Wind speed</a></li>
+              <li><a href="#var-dusk">Dusk / civil twilight</a></li>
+              <li><a href="#var-not-used">Explicitly not used</a></li>
+            </ul>
+          </li>
           <li><a href="#verification">Key definitions & verification sources</a></li>
           <li><a href="#example">Worked example</a></li>
           <li><a href="#changelog">Model changelog</a></li>

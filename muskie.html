@@ -197,7 +197,8 @@ L_time = (timeBias / 0.40) × 0.03                           // small by design
 
 Step 5) Weather adjustment
 // Muskie keeps a small wind-speed penalty (direction from Shaw 2021; magnitude calibrated)
-L_weather = genericWindPenalty(windSpeed, windPenalty)      // windPenalty = 0.008 per 5 mph over 10
+weatherAdj = genericWindPenalty(windSpeedMph, windPenalty)  // windPenalty = 0.008 per 5 mph over 10 (calibrated)
+L_weather  = (weatherAdj / 0.30) × 0.02                     // lift conversion (matches SPECIES_LIFTS.weather in code)
 
 Step 6) Apply seasonal multiplier
 L_total = clamp((L_base + L_phase + L_overlap + L_time + L_weather) × seasonMult, 0, L_REF)
